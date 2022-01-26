@@ -4,16 +4,16 @@ import com.urise.webapp.model.Resume;
 
 import java.util.Arrays;
 
-/**
- * Array based storage for Resumes
- */
-public class ArrayStorage {
-    public Resume[] storage = new Resume[10000];
-    public int size;
+public class ArrayStorage implements Storage {
 
-    public int getIndexNumber(String uuid) {
-        for(int i = 0; i < size; i++) {
-            if(storage[i].getUuid().equals(uuid)) {
+    private static final int STORAGE_LIMIT = 10000;
+
+    private final Resume[] storage = new Resume[10000];
+    private int size;
+
+    private int findIndex(String uuid) {
+        for (int i = 0; i < size; i++) {
+            if (storage[i].getUuid().equals(uuid)) {
                 return i;
             }
         }
@@ -21,9 +21,9 @@ public class ArrayStorage {
     }
 
     public void save(Resume resume) {
-        if(getIndexNumber(resume.getUuid()) != -1) {
+        if (findIndex(resume.getUuid()) != -1) {
             System.out.println("Resume also ready");
-        } else if(size >= 10000) {
+        } else if (size >= STORAGE_LIMIT) {
             System.out.println("OVERFLOW");
         } else {
             storage[size] = resume;
@@ -32,26 +32,27 @@ public class ArrayStorage {
     }
 
     public void update(Resume resume) {
-            if (getIndexNumber(resume.getUuid()) != -1) {
-                storage[getIndexNumber(resume.getUuid())] = resume;
-            } else {
-                System.out.println("Resume not found for update");
-            }
-    }
-
-    public Resume get(String uuid) {
-        if (getIndexNumber(uuid) != -1) {
-            return storage[getIndexNumber(uuid)];
+        int i = findIndex(resume.getUuid());
+        if (i != -1) {
+            storage[i] = resume;
         } else {
-            return null;
+            System.out.println("Resume " + resume.getUuid() + " not found for update");
         }
     }
 
+    public Resume get(String uuid) {
+        if (findIndex(uuid) != -1) {
+            return storage[findIndex(uuid)];
+        }
+        return null;
+    }
+
     public void delete(String uuid) {
-        if (getIndexNumber(uuid) == -1) {
-            System.out.println("Resume not found");
+        int i = findIndex(uuid);
+        if (i == -1) {
+            System.out.println("Resume " + uuid + " not found");
         } else {
-            storage[getIndexNumber(uuid)] = storage[size - 1];
+            storage[i] = storage[size - 1];
             storage[size - 1] = null;
             size--;
         }
