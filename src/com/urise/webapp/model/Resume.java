@@ -1,6 +1,6 @@
 package com.urise.webapp.model;
 
-public class Resume {
+public class Resume implements Comparable<Resume>{
 
     private String uuid;
 
@@ -30,5 +30,10 @@ public class Resume {
     @Override
     public String toString() {
         return uuid;
+    }
+
+    @Override
+    public int compareTo(Resume o) {
+        return uuid.compareTo(o.uuid);
     }
 }
