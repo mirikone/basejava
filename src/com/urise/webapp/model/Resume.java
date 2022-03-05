@@ -1,15 +1,20 @@
 package com.urise.webapp.model;
 
-public class Resume implements Comparable<Resume>{
+import java.util.UUID;
 
-    private String uuid;
+public class Resume implements Comparable<Resume> {
+
+    private final String uuid;
+
+    public Resume() {
+        this(UUID.randomUUID().toString());
+    }
+    public Resume(String uuid) {
+        this.uuid = uuid;
+    }
 
     public String getUuid() {
         return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
     }
 
     @Override
